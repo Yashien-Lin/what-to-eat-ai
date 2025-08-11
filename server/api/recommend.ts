@@ -54,9 +54,9 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error('Error:', error)
     return {
-      error: language === 'zh'
-        ? 'AI 回傳內容無法解析，請稍後再試'
-        : 'AI response could not be parsed, please try again later'
+      error: language === 'en'
+      ? 'AI response could not be parsed, please try again later'
+      : 'AI 回傳內容無法解析，請稍後再試'
     }
   }
 })

@@ -174,17 +174,16 @@
 
       <!-- 推薦理由 -->
       <p class="mb-3 text-sm text-gray-600">
-        💡 <strong>推薦理由：</strong> {{ recipe.reason || '無提供' }}
+        💡 <strong>{{ data[language].recommended }}：</strong> {{ recipe.reason || '無提供' }}
       </p>
 
       <!-- 食材清單 -->
       <p class="mb-3 text-sm text-gray-700">
-        🛒 <strong>食材：</strong> {{ recipe.ingredients.join('、') }}
+        🛒 <strong>{{  data[language].ingredients }} ：</strong> {{ recipe.ingredients.join('、') }}
       </p>
-
       <!-- 步驟說明 -->
       <div>
-        <p class="mb-1 text-sm font-medium text-gray-700">👨‍🍳 <strong>做法：</strong></p>
+        <p class="mb-1 text-sm font-medium text-gray-700">👨‍🍳 <strong>{{ data[language].instruction }}：</strong></p>
         <ol class="pl-4 space-y-1 text-sm text-gray-700 list-decimal">
           <li v-for="(step, index) in recipe.steps" :key="`step_${index}`">{{ step }}</li>
         </ol>
@@ -209,7 +208,7 @@ const selected = ref({
 })
 
 // i18n
-const language = ref('zh')  // 預設中文
+const language = ref('en')  // 預設英文
 const data = {
   zh: {
     title: '今天吃什麼？',
@@ -233,7 +232,10 @@ const data = {
     makingRecipe: ' AI 正在為您客製專屬菜單...',
     recipeTitle: '專屬你的美味上桌囉！',
     searchingMeals: 'AI 美食雷達偵測中...',
-    mealsTitle: 'AI 為您精選推薦 ！'
+    mealsTitle: 'AI 為您精選推薦 ！',
+    recommend: '推薦理由',
+    ingredients: '食材',
+    instruction: '作法'
   },
   en: {
     title: 'What to Eat Today?',
@@ -257,7 +259,10 @@ const data = {
     makingRecipe: 'Cooking up your custom menu...',
     recipeTitle: 'Dishes Cooked Just for You!',
     searchingMeals: 'Looking for tasty bites nearby...',
-    mealsTitle: 'Handpicked by AI – Delish Inside!'
+    mealsTitle: 'Handpicked by AI – Delish Inside!',
+    recommend: 'Why Recommended',
+    ingredients: 'Ingredients',
+    instruction: 'Instruction'
   }
 }
 
@@ -287,9 +292,9 @@ const loading = ref(false)
 const recipeList = ref([])
 const getRecommendation = async () => {
   if (selected.value.scene === '') {
-    language.value === 'zh' 
-    ? alert('請先選擇你打算在哪裡用餐')
-    : alert('Please select where you plan to dine first')
+    language.value === 'en' 
+    ? alert('Please select where you plan to dine')
+    : alert('請先選擇你打算在哪裡用餐')
     return
   }
 

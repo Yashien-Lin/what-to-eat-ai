@@ -5,11 +5,11 @@ export default defineEventHandler(async (event) => {
   const { lat, lng, keyword, language } = body
 
   const langMap: Record<string, string> = {
-    zh: 'zh-TW',
     en: 'en',
+    zh: 'zh-TW',
   }
 
-  const googleLang = langMap[language] || 'zh-TW'
+  const googleLang = langMap[language] || 'ens'
 
   const url = new URL('https://maps.googleapis.com/maps/api/place/textsearch/json')
   url.searchParams.set('query', keyword || '餐廳')
