@@ -60,9 +60,11 @@
         <h2 class="mb-3 text-lg font-semibold text-center text-gray-800">
           {{ data[language].subTitles.preference }}
         </h2>
-        <div class="flex flex-wrap justify-center gap-2">
+        <div
+          v-for="(group, groupIndex) in data[language].preferences" :key="`group_${groupIndex}`"
+          class="flex flex-wrap justify-center gap-2 mb-2">
           <button
-            v-for="option in data[language].preferences"
+            v-for="option in group"
             :key="option"
             @click="togglePreference(option)"
             :class="[
@@ -164,7 +166,7 @@
     <!-- 單欄卡片 -->
     <div
       v-for="(recipe, index) in recipeList"
-      :key="index"
+      :key="`recipe_${index}`"
       class="w-full p-4 bg-white border shadow-sm rounded-xl"
     >
       <!-- 食譜標題 -->
@@ -184,15 +186,15 @@
       <div>
         <p class="mb-1 text-sm font-medium text-gray-700">👨‍🍳 <strong>做法：</strong></p>
         <ol class="pl-4 space-y-1 text-sm text-gray-700 list-decimal">
-          <li v-for="(step, i) in recipe.steps" :key="i">{{ step }}</li>
+          <li v-for="(step, index) in recipe.steps" :key="`step_${index}`">{{ step }}</li>
         </ol>
       </div>
     </div>
   </div>
     
-  <div v-if="nearbyPlaces.length" class="p-5 mt-6 bg-white border rounded-lg">
+  <div v-if="nearbyRestaurants.length" class="p-5 mt-6 bg-white border rounded-lg">
     <h3 class="mb-5 text-xl font-bold text-center text-slate-800">🎯 {{ data[language].mealsTitle }}</h3>
-    <GooglePlaceCard :places="nearbyPlaces" :language="language" />
+    <GooglePlaceCard :restaurants="nearbyRestaurants" :language="language" />
   </div>
   </div>
 </template>
@@ -220,12 +222,12 @@ const data = {
     meals: ['早餐', '午餐', '晚餐', '宵夜'],
     scenes: ['自己煮', '外面吃'],
     preferences: [
-      '不吃辣', '不吃海鮮', '素食',
-      '不吃澱粉', '低碳', '清爽', '重口味',
-      '熱食', '冷食', '需含肉', '需含菜', '需含蛋白質',
-      '飯類', '麵類', '醬汁類', '甜食', '點心',
-      '小吃', '便當', '餐廳', 
-      '中式料理', '西式料理', '日式料理', '韓式料理', '東南亞料理', 
+      ['小吃', '便當', '餐廳'], 
+      ['不吃辣', '不吃海鮮', '素食'],
+      ['不吃澱粉', '低碳', '清爽', '重口味'],
+      ['需含肉', '需含菜', '需含蛋白質'],
+      ['飯類', '麵類', '醬汁類', '甜食', '點心'],
+      ['中式料理', '美式料理', '歐式料理', '地中海料理','中東料理', '印度料理', '日式料理', '韓式料理', '東南亞料理'], 
     ],
     submit: '來點美味的吧，AI！',
     makingRecipe: ' AI 正在為您客製專屬菜單...',
@@ -244,12 +246,12 @@ const data = {
     meals: ['Breakfast', 'Lunch', 'Dinner', 'Midnight Snack'],
     scenes: ['Home Cooking', 'Dining Out'],
     preferences: [
-      'No spicy food', 'No seafood', 'Vegetarian',
-      'No carbs', 'Low carbs', 'Light', 'Strong flavor',
-      'Hot food', 'Cold food', 'Must contain meat', 'Must contain vegetables', 'Must contain protein',
-      'Rice dishes', 'Noodle dishes', 'Saucy dishes', 'Desserts', 'Snacks',
-      'Street food', 'Bento', 'Restaurant',
-      'Chinese cuisine', 'Western cuisine', 'Japanese cuisine', 'Korean cuisine', 'Southeast Asian cuisine',
+      ['Street food', 'Bento', 'Restaurant'],
+      ['No spicy food', 'No seafood', 'Vegetarian'],
+      ['No carbs', 'Low carbs', 'Light', 'Strong flavor'],
+      ['Must contain meat', 'Must contain vegetables', 'Must contain protein'],
+      ['Rice dishes', 'Noodle dishes', 'Saucy dishes', 'Desserts', 'Snacks'],
+      ['Chinese cuisine', 'American cuisine', 'European cuisine', 'Mediterranean cuisine', 'Middle Eastern cuisine', 'Indian cuisine', 'Japanese cuisine', 'Korean cuisine', 'Southeast Asian cuisine'],
     ],
     submit: 'Feed Me, AI!',
     makingRecipe: 'Cooking up your custom menu...',
@@ -281,10 +283,8 @@ function buttonClass(option, current) {
   ]
 }
 
-
 const loading = ref(false)
 const recipeList = ref([])
-
 const getRecommendation = async () => {
   if (selected.value.scene === '') {
     language.value === 'zh' 
@@ -295,6 +295,7 @@ const getRecommendation = async () => {
 
   loading.value = true
   recipeList.value = []
+  nearbyRestaurants.value = []
 
   // 判斷選擇場景
   const scene = selected.value.scene
@@ -320,22 +321,8 @@ const getRecommendation = async () => {
   } 
 }
 
-// 取得使用者位置
-const getUserLocation = () => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos.coords.latitude
-        const lng = pos.coords.longitude
-        resolve({ lat, lng })
-      },
-      (err) => reject(err)
-    )
-  })
-}
-
 // 呼叫google api，取得定位及附近餐廳
-const nearbyPlaces = ref([])
+const nearbyRestaurants = ref([])
 const getNearbyRestaurants = async () => {
   const { lat, lng } = await getUserLocation()
 
@@ -349,11 +336,23 @@ const getNearbyRestaurants = async () => {
   
   console.log('google recipeList: ', res);
 
-  nearbyPlaces.value = res.results || []
+  nearbyRestaurants.value = res.results || []
   loading.value = false
 }
 
-
+// 取得使用者位置
+const getUserLocation = () => {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude
+        const lng = pos.coords.longitude
+        resolve({ lat, lng })
+      },
+      (err) => reject(err)
+    )
+  })
+}
 
 </script>
 
