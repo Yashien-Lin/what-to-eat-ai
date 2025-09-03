@@ -1,75 +1,46 @@
-# Nuxt Minimal Starter
+# 🍽️  What to Eat Today
+**AI Food Recommendation Web App**
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## 📖 Introduction
+What to Eat Today is a fun and practical AI-powered food recommendation app.
+Users can simply select their dining preferences or occasions, and the AI will generate personalized recipes with ingredients, steps, and reasons.
+Alternatively, it can suggest nearby restaurants using Google Maps API.
+Whether you’re cooking at home or dining out, you’ll never run out of ideas!
 
-## Setup
+## ✨ Features
+🤖 AI Recipe Generation: Powered by OpenAI API, providing ingredients, steps, and recommendation reasons
 
-Make sure to install dependencies:
+🍜 Restaurant Finder: Integrated with Google Maps API to quickly locate nearby restaurants
 
-```bash
-# npm
-npm install
+🎨 Responsive Design: Mobile-friendly and desktop-friendly with clean UI
 
-# pnpm
-pnpm install
+⚡ Easy Deployment: Automatically built and updated via Vercel
 
-# yarn
-yarn install
+## 🛠 Tech Stack
+- Frontend Framework: Vue 3 + Nuxt 3
+- Styling: Tailwind CSS
+- AI Model: OpenAI API
+- Map Service: Google Maps API
+- Deployment: Vercel
 
-# bun
-bun install
+## 🚀 Installation & Setup
+### Install dependencies
+`npm install`
+
+### Run development server
+`npm run dev`
+
+### Build for production
+`npm run build`
+
+## 📌 Environment Variables
+Create a `.env` file and add the following keys:
+```
+OPENAI_API_KEY=your_openai_api_key
+GOOGLE_API_KEY=your_google_api_key
 ```
 
-## Development Server
+## 🌐 Demo
+👉 [Visit the Website](https://what-to-eat-ai.vercel.app/)
 
-Start the development server on `http://localhost:3000`:
 
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
