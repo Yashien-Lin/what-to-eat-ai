@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  --background: #e5e7eb;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+button {
+  cursor: pointer;
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 text-gray-800 transition bg-gray-100 border border-purple-400 rounded-full;
+  }
+
+  .btn-small {
+    @apply px-3 py-1 text-sm transition border rounded-full bg-amber-100 text-amber-700 border-amber-300;
+  }
+
+  /* 只在可以 hover 的設備啟用 hover 效果 */
+  @media (hover: hover) {
+    .btn-small:hover {
+      @apply bg-amber-200;
+    }
+    .btn-small--selected:hover {
+      @apply bg-amber-600;
+    }
+    .btn:hover {
+      @apply bg-purple-300;
+    }
+    .btn--selected:hover {
+      @apply bg-purple-600;
+    }
+  }
+
+  .btn--selected {
+    @apply text-white bg-purple-500 border-purple-600;
+  }
+  .btn-small--selected {
+    @apply text-white bg-amber-500 border-amber-600;
+  }
+}
+
+/* 鍋子動畫 */
+@keyframes pot-swing {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(25deg);
+  }
+  50% {
+    transform: rotate(-25deg);
+  }
+  75% {
+    transform: rotate(25deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* 雷達動畫 */
+.animate-pot-swing {
+  animation: pot-swing 1s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* 進度條動畫  */
+@keyframes marquee {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 2s linear infinite;
+}
