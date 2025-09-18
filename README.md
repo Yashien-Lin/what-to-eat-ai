@@ -20,7 +20,7 @@ Whether you’re cooking at home or dining out, you’ll never run out of ideas!
 ⚡ **Easy Deployment**: Automatically built and updated via Vercel
 
 ## 🛠 Tech Stack
-- Frontend Framework: **React + Next.js 13 (App Router)**
+- Frontend Framework: **React + Next.js 15**
 - Styling: Tailwind CSS
 - AI Model: OpenAI API
 - Map Service: Google Maps API
