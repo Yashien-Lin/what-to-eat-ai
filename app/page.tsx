@@ -1,4 +1,5 @@
 "use client"
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MealSelector from "@/components/MealSelector"
@@ -26,8 +27,8 @@ export interface Selected {
 export default function Home() {
   
   // i18n
-  const [ language, setLanguage ] = useState<Language>('en');
-  const [ selected, setSelected ] = useState<Selected>({
+  const [language, setLanguage] = useState<Language>('en');
+  const [selected, setSelected] = useState<Selected>({
     meal: '',
     scene: '',
     preferences: []
@@ -100,9 +101,10 @@ export default function Home() {
       body: JSON.stringify({lat, lng, keyword, language: language })
     }).then(data => data.json());
     
+    setResultType('restaurant');
+    
     if (data.length > 0) {
       setRestaurantList(data);
-      setResultType('restaurant');
     } else {
       setNoData(true);
     }
@@ -125,13 +127,14 @@ export default function Home() {
   return (
     <div className="min-h-screen p-4 mx-auto">
       {/* 中英切換按鈕 */}
-      <LanguageSwitcher language={language} setLanguage={setLanguage} />
+      <LanguageSwitcher language={language} setLanguage={setLanguage} loading={loading} />
       <div className="max-w-2xl p-6 mx-auto">
-        <h1 className="mb-6 text-2xl font-bold text-center text-gray-800">🍲{ data.title }</h1>
+        <h1 className="mb-6">🍲{ data.title }</h1>
 
         {/* Step 1: 時段選擇 */}
         <MealSelector
           data={data}
+          loading={loading}
           selectedMeal={selected.meal}
           onSelectMeal={meal =>
             setSelected(prev => ({...prev, meal}))
@@ -140,6 +143,7 @@ export default function Home() {
         {/* Step 2: 場景選擇 */}
         <SceneSelector
           data={data}
+          loading={loading}
           selectedScene={selected.scene}
           onSelectScene={scene =>
             setSelected(prev => ({...prev, scene}))
@@ -148,6 +152,7 @@ export default function Home() {
         {/* Step 3: 偏好選擇 */}
         <PreferenceSelector
           data={data}
+          loading={loading}
           selectedPreferences={selected.preferences}
           onSelectPreferences={(prefs: string[]) =>
             setSelected((prev) => ({ ...prev, preferences: prefs }))
@@ -158,14 +163,13 @@ export default function Home() {
       {/* 送出按鈕 */}
       <div className="my-5 text-center">
         <button
-          className="px-6 py-3 text-white transition bg-purple-800 rounded-full hover:bg-purple-900"
+          className={clsx('px-6 py-3 text-white transition rounded-full', loading ? 'bg-gray-400 cursor-not-allowed': 'bg-purple-800  hover:bg-purple-900')}
           onClick={() => getRecommendation()}
           disabled={loading}
         >
           🤖 { data.submit }
         </button>
       </div>
-      {/* loading: {loading.toString()} */}
       {loading && (
         <LoadingAnimation scene={selected.scene} recipeMessage={data.makingRecipe} restaurantMessage={data.searchingMeals}/>
       )}
@@ -184,12 +188,13 @@ export default function Home() {
         />
       )}
       {/* 餐廳列表 */}
-      {(resultType === 'restaurant' && (
+      {resultType === 'restaurant' && (
         noData ? (
-        <h4 className="my-8 text-center text-gray-500">{data.noRestaurants}</h4>
-      ) : (
-        <RestaurantList restaurants={restaurantList} language={language} title={data.mealsTitle} />
-      )))}
+          <h3 className="my-8 text-gray-500">{data.noRestaurants}</h3>
+        ) : (
+          <RestaurantList restaurants={restaurantList} language={language} title={data.mealsTitle} />
+        )
+      )}
     </div>
   );
 }

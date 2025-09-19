@@ -22,7 +22,7 @@ export default function RestaurantList({ restaurants, language = "en", title }: 
 
   return (
     <div className="p-5 mt-6 bg-white rounded-lg">
-      <h3 className="mb-5 text-xl font-bold text-center text-slate-800">🎯 { title }</h3>
+      <h2 className="mb-5">🎯 { title }</h2>
       {restaurants.map(restaurant => (
         <div
           key={restaurant.place_id}
@@ -47,7 +47,7 @@ export default function RestaurantList({ restaurants, language = "en", title }: 
           }
 
           <div className="flex-1 overflow-hidden">
-            <h3 className="text-sm font-semibold text-gray-800 truncate">{ restaurant.name }</h3>
+            <h4 className="text-left truncate">{ restaurant.name }</h4>
             <p className="text-xs text-gray-500 truncate">{ restaurant.address }</p>
             <a
               href={restaurant.mapUrl}
