@@ -26,7 +26,7 @@ const en: DataStructure = {
   recommend: 'Why Recommended',
   ingredients: 'Ingredients',
   instruction: 'Instruction',
-  noRestaurants: "No matching restaurants nearby 🥲"
+  noRestaurants: 'No matching restaurants nearby 🥲'
 }
 
 export default en;

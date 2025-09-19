@@ -7,9 +7,8 @@ interface LoadingAnimationProps {
 export default function LoadingAnimation({scene, recipeMessage, restaurantMessage}: LoadingAnimationProps) {
   return (
     <div className="flex flex-col items-center my-6 space-y-4">
-      {/* scene: {scene.toString()} */}
       {/* 鍋子動畫 */}
-      { scene === '自己煮' || scene === 'Home Cooking' && (
+      {(scene === '自己煮' || scene === 'Home Cooking') && (
         <div className="flex items-center justify-center my-2 space-x-2 text-lg font-semibold text-slate-600">
           <svg className="mb-2 w-9 h-9 animate-pot-swing" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 
             viewBox="0 0 512 512" xmlSpace="preserve">
@@ -53,7 +52,7 @@ export default function LoadingAnimation({scene, recipeMessage, restaurantMessag
         </div>
       )}
       {/* 雷達動畫 */}
-      { scene === '外面吃' || scene === 'Dining Out' && (
+      {(scene === '外面吃' || scene === 'Dining Out') && (
         <div className="flex items-center justify-center my-2 text-lg font-semibold text-slate-600">
           <svg
             className="w-6 h-6 mr-4 animate-ping"

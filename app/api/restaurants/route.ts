@@ -30,8 +30,7 @@ export async function POST(request: Request) {
     url.searchParams.set('location', `${lat},${lng}`)
     url.searchParams.set('radius', '1000') // 公尺
     url.searchParams.set('language', googleLang)
-    url.searchParams.set('key', apiKey || '') // TODO: 筆記
-    console.log('url: ', url.toString());
+    url.searchParams.set('key', apiKey || '')
 
     const response = await fetch(url.toString())
     const data = await response.json()

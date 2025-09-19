@@ -1,5 +1,5 @@
 import en from './en';
-import zh from './zh'; // TODO:
+import zh from './zh';
 import type { Language, DataStructure } from '@/types/i18n';
 
 const locales: Record<Language, DataStructure> = {
