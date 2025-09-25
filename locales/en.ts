@@ -18,7 +18,7 @@ const en: DataStructure = {
     ['Rice dishes', 'Noodle dishes', 'Saucy dishes', 'Desserts', 'Snacks'],
     ['Chinese cuisine', 'American cuisine', 'European cuisine', 'Mediterranean cuisine', 'Middle Eastern cuisine', 'Indian cuisine', 'Japanese cuisine', 'Korean cuisine', 'Southeast Asian cuisine'],
   ],
-  submit: 'Feed Me, AI!',
+  submit: 'Feed Me, AI !!',
   makingRecipe: 'Cooking up your custom menu...',
   recipeTitle: 'Dishes Cooked Just for You!',
   searchingMeals: 'Looking for tasty bites nearby...',

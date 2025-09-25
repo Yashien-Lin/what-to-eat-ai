@@ -42,7 +42,7 @@ body {
 
 @layer components {
   .btn {
-    @apply px-4 py-2 text-gray-800 transition bg-gray-100 border border-purple-400 rounded-full;
+    @apply px-3 py-1 sm:px-4 sm:py-2 text-gray-800 transition bg-gray-100 border border-purple-400 rounded-full;
   }
 
   .btn-small {
@@ -110,4 +110,41 @@ body {
 
 .animate-marquee {
   animation: marquee 2s linear infinite;
+}
+
+/* 光暈效果 */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* 流動邊框效果 */
+@keyframes border-glow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-border-glow::before {
+  content: "";
+  position: absolute;
+  inset: -2px; /* 邊框粗細 */
+  border-radius: inherit;
+  background: linear-gradient(270deg, #ec4899, #8b5cf6, #f59e0b, #ec4899);
+  background-size: 300% 300%;
+  animation: border-glow 4s linear infinite;
+  z-index: -1;
+}
+
+.animate-border-glow::after {
+  content: "";
+  position: absolute;
+  inset: 2px; /* 內層補色，避免背景被蓋掉 */
+  border-radius: inherit;
+  background: linear-gradient(to right, #ec4899, #8b5cf6); /* 按鈕底色 */
+  z-index: -1;
 }
