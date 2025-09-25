@@ -21,7 +21,7 @@ export default function RestaurantList({ restaurants, language = "en", title }: 
   }
 
   return (
-    <div className="p-5 mt-6 bg-white rounded-lg">
+    <div className="max-w-3xl mx-auto p-5 mt-6 bg-white rounded-lg text-sm sm:text-base">
       <h2 className="mb-5">🎯 { title }</h2>
       {restaurants.map(restaurant => (
         <div

@@ -17,7 +17,7 @@ export default function RecipeList({
   instructionLabel
 }: RecipeListProps) {
   return (
-    <div className="max-w-3xl mx-auto mb-8 space-y-6">
+    <div className="max-w-3xl mx-auto mb-8 space-y-6 text-sm sm:text-base">
       <h2>🍽️ { title }</h2>
       
       {/* 單欄卡片 */}

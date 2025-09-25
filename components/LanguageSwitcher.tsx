@@ -14,7 +14,7 @@ export default function LanguageSwitcher({language, loading, setLanguage}: Langu
   ]
   
   return (
-    <div className="text-right">
+    <div className="text-right mb-4">
       <div className="inline-flex overflow-hidden text-sm border border-purple-600 rounded-full">
         {options.map(opt => (
           <button

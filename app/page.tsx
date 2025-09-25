@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MealSelector from "@/components/MealSelector"
 import SceneSelector from "@/components/SceneSelector";
+import PersonalizedButton from "@/components/PersonalizedButton"
 import LoadingAnimation from "@/components/LoadingAnimation"
 import PreferenceSelector from "@/components/PreferenceSelector";
 import RestaurantList from "@/components/RestaurantList";
@@ -125,11 +126,11 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen p-4 mx-auto">
+    <div className="min-h-screen p-4 mx-auto text-sm sm:text-base">
       {/* 中英切換按鈕 */}
       <LanguageSwitcher language={language} setLanguage={setLanguage} loading={loading} />
-      <div className="max-w-2xl p-6 mx-auto">
-        <h1 className="mb-6">🍲{ data.title }</h1>
+      <div className="max-w-2xl md:p-6 mx-auto">
+        <h1 className="mb-6">🍲 { data.title }</h1>
 
         {/* Step 1: 時段選擇 */}
         <MealSelector
@@ -162,20 +163,14 @@ export default function Home() {
     
       {/* 送出按鈕 */}
       <div className="my-5 text-center">
-        <button
-          className={clsx('px-6 py-3 text-white transition rounded-full', loading ? 'bg-gray-400 cursor-not-allowed': 'bg-purple-800  hover:bg-purple-900')}
-          onClick={() => getRecommendation()}
-          disabled={loading}
-        >
-          🤖 { data.submit }
-        </button>
+        <PersonalizedButton submitText={data.submit} loading={loading} onClick={() => getRecommendation()}/>
       </div>
       {loading && (
         <LoadingAnimation scene={selected.scene} recipeMessage={data.makingRecipe} restaurantMessage={data.searchingMeals}/>
       )}
 
       {/* 分隔線 */}
-      {!loading && <hr className="my-8 border-t-2 border-purple-200" />}
+      {(recipeList.length > 0|| restaurantList.length > 0) && <hr className="my-8  lg:w-[70%]  border-t-2 border-gray-300 mx-auto" />}
 
       {/* 食譜列表 */}
       {resultType === 'recipe' && ( 

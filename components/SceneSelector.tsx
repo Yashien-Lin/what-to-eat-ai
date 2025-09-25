@@ -14,7 +14,7 @@ export default function MealSelector({ data, loading, selectedScene, onSelectSce
       <h3 className="mb-1">
         { data.subTitles.scene }
       </h3>
-      <div className="flex flex-wrap justify-center gap-3">
+      <div className="flex flex-wrap justify-center gap-1 sm:gap-3">
         {
           data.scenes.map(option => (
             <button
