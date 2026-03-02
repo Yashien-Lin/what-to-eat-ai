@@ -1,65 +1,57 @@
-import { Language } from '@/types';
 import { Restaurant } from '@/types';
-import Image from 'next/image';
+import Rating from '@mui/material/Rating';
+import { useLanguage } from '@/context/LanguageContext';
 
-interface RestaurantListProps {
-  restaurants: Restaurant[];
-  language: Language;
-  title: string;
-}
-
-export default function RestaurantList({ restaurants, language = "en", title }: RestaurantListProps) {
-  function getPhotoUrl(photoRef: string, maxWidth = 100) {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-
-    const thumbnailUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoRef}&key=${apiKey}`
-    return thumbnailUrl;
-  }
+export default function RestaurantList({ restaurants }: { restaurants: Restaurant[] }) {
+  const { messages } = useLanguage();
 
   const openMap = (url: string) => {
-    window.open(url, '_blank')
-  }
+    window.open(url, '_blank');
+  };
 
   return (
-    <div className="max-w-3xl mx-auto p-5 mt-6 bg-white rounded-lg text-sm sm:text-base">
-      <h2 className="mb-5">🎯 { title }</h2>
-      {restaurants.map(restaurant => (
-        <div
-          key={restaurant.place_id}
-          className="flex items-center p-3 mb-4 transition bg-purple-100 border-purple-300 rounded-lg shadow cursor-pointer hover:shadow-md hover:bg-purple-200"
-          onClick={() => openMap(restaurant.mapUrl)}
-        >
-          {
-            restaurant.photos && restaurant.photos.length > 0 ? (
-              <Image
-                src={getPhotoUrl(restaurant.photos[0].photo_reference)}
-                width={64}
-                height={64}
-                className="object-cover w-16 h-16 mr-3 rounded"
-                alt="restaurant photo"
-                priority
+    <>
+      <h2>🎯 {messages.result.restaurant.mealsTitle}</h2>
+      <div className="border border-purple-300 bg-blue-50 rounded-lg text-sm sm:text-base p-4 md:p-7 space-y-4">
+        {restaurants.map((restaurant) => (
+          <div
+            key={restaurant.place_id}
+            className="border border-purple-200 flex items-center p-3 transition bg-purple-100 
+              rounded-lg shadow cursor-pointer hover:shadow-md hover:bg-purple-200"
+            onClick={() => openMap(restaurant.google_maps_url)}
+          >
+            {restaurant.photoUrl ? (
+              <img
+                src={restaurant.photoUrl || '/no-image.png'}
+                className="object-cover mr-3 rounded w-18 h-18"
+                alt={restaurant.name}
+                loading="lazy"
               />
             ) : (
-              <div className="flex items-center justify-center w-16 h-16 mr-3 text-sm text-gray-400 bg-gray-200 rounded">
+              <div className="flex items-center justify-center w-16 h-16 mr-3 text-xs text-gray-400 bg-gray-200 rounded">
                 No Image
               </div>
-            )
-          }
+            )}
 
-          <div className="flex-1 overflow-hidden">
-            <h4 className="text-left truncate">{ restaurant.name }</h4>
-            <p className="text-xs text-gray-500 truncate">{ restaurant.address }</p>
-            <a
-              href={restaurant.mapUrl}
-              target="_blank"
-              className="inline-block mt-1 text-sm font-bold text-purple-600"
-              onClick={(e) => e.stopPropagation()}
-            >
-              { language === 'zh' ? '🗺️ 查看地圖' : '🗺️ View Map' }
-            </a>
+            <div className="flex flex-col overflow-hidden">
+              <h4 className="text-left mb-0 truncate">{restaurant.name}</h4>
+              <p className="text-xs text-gray-500 truncate">{restaurant.address}</p>
+              <Rating value={restaurant.rating} precision={0.5} size="small" readOnly />
+              <a
+                href={restaurant.google_maps_url}
+                target="_blank"
+                className="mt-1 text-sm font-bold text-purple-700"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span>🗺️</span>
+                <span className="ms-1 text-xs sm:text-sm">
+                  {messages.result.restaurant.checkMap}
+                </span>
+              </a>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
