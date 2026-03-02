@@ -1,16 +1,15 @@
-interface LoadingAnimationProps {
-  scene: string;
-  recipeMessage: string;
-  restaurantMessage: string;
-}
+import { useLanguage } from "@/context/LanguageContext";
+import { Scene } from "@/types";
 
-export default function LoadingAnimation({scene, recipeMessage, restaurantMessage}: LoadingAnimationProps) {
+export default function LoadingAnimation({scene}: {scene: Scene}) {
+  const { messages } = useLanguage();
+
   return (
     <div className="flex flex-col items-center my-6 space-y-4">
       {/* 鍋子動畫 */}
-      {(scene === '自己煮' || scene === 'Home Cooking') && (
-        <div className="flex items-center justify-center my-2 space-x-2 text-lg font-semibold text-slate-600">
-          <svg className="mb-2 w-9 h-9 animate-pot-swing" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 
+      {(scene === 'home') && (
+        <div className="flex items-center justify-center my-2 space-x-2 text-normal sm:text-lg font-semibold text-slate-600">
+          <svg className="mb-2 w-7 h-7 sm:w-7 sm:h-7 animate-pot-swing" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 
             viewBox="0 0 512 512" xmlSpace="preserve">
             <path style={{fill: "#D19B3F"}} d="M478.261,261.244c0,9.209-7.463,16.676-16.67,16.676h-5.556v11.117H55.964v-11.117h-5.556
               c-9.206,0-16.67-7.466-16.67-16.676s7.463-16.676,16.67-16.676h250.359c-0.201-1.825-0.314-3.679-0.314-5.559
@@ -46,16 +45,16 @@ export default function LoadingAnimation({scene, recipeMessage, restaurantMessag
                 L234.287,145.038z"/>
             </g>
           </svg>
-          <span className="font-semibold text-slate-800">
-            { recipeMessage }
-          </span>
+          <h2 className="mb-0">
+            { messages.result.recipe.searching }
+          </h2>
         </div>
       )}
       {/* 雷達動畫 */}
-      {(scene === '外面吃' || scene === 'Dining Out') && (
+      {(scene === 'dine_out') && (
         <div className="flex items-center justify-center my-2 text-lg font-semibold text-slate-600">
           <svg
-            className="w-6 h-6 mr-4 animate-ping"
+            className="w-4 h-4 sm:w-6 sm:h-6 mr-4 animate-ping"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -66,13 +65,14 @@ export default function LoadingAnimation({scene, recipeMessage, restaurantMessag
             <circle cx="12" cy="12" r="6" />
             <circle cx="12" cy="12" r="2" strokeOpacity="0.7" />
           </svg>
-          <span className="font-semibold text-slate-800">{ restaurantMessage }</span>
+          <h2 className="mb-0">{ messages.result.restaurant.searching }</h2>
         </div>
       )}
 
       {/* 進度條 */}
-      <div className="relative w-3/4 h-2 my-8 overflow-hidden bg-gray-300 rounded-full">
-        <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-purple-400 via-purple-700 to-purple-400 animate-marquee"></div>
+      <div className="relative w-full h-2 my-4 sm:my-6 overflow-hidden bg-gray-300 rounded-full">
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r
+          from-purple-400via-purple-700 to-purple-400 animate-marquee"></div>
       </div>
     </div>
   )

@@ -1,36 +1,33 @@
-import clsx from "clsx";
-import type { DataStructure } from '@/types';
+import clsx from 'clsx';
+import { Scene } from '@/types';
+import { useLanguage } from '@/context/LanguageContext';
 
-interface MealSelectorProps {
-  data: DataStructure;
+interface SceneSelectorProps {
+  value: Scene;
+  onChange: (meal: Scene) => void;
   loading: boolean;
-  selectedScene: string;
-  onSelectScene: (meal: string) => void;
 }
 
-export default function MealSelector({ data, loading, selectedScene, onSelectScene }: MealSelectorProps) {
+const SCENE: Scene[] = ['home', 'dine_out'];
+
+export default function SceneSelector({ value, onChange, loading }: SceneSelectorProps) {
+  const { messages } = useLanguage();
+
   return (
     <div className="mb-6">
-      <h3 className="mb-1">
-        { data.subTitles.scene }
-      </h3>
-      <div className="flex flex-wrap justify-center gap-1 sm:gap-3">
-        {
-          data.scenes.map(option => (
-            <button
-              key={option}
-              disabled={loading}
-              onClick={() => onSelectScene(option)}
-              className={ clsx(
-              'btn',
-              option === selectedScene && 'btn--selected',
-              loading && 'cursor-not-allowed'
-            )}>
-              { option }
-            </button>
-          ))
-        }
+      <h2>{messages.scenes.title}</h2>
+      <div className="flex gap-2 justify-center item-center">
+        {SCENE.map((scene) => (
+          <button
+            key={scene}
+            disabled={loading}
+            onClick={() => onChange(scene)}
+            className={clsx('btn', scene === value ? 'btn--selected' : '')}
+          >
+            {messages.scenes[scene]}
+          </button>
+        ))}
       </div>
     </div>
-  )
+  );
 }

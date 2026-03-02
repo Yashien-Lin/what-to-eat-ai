@@ -1,49 +1,64 @@
-import clsx from "clsx";
-import type { DataStructure } from '@/types';
+import clsx from 'clsx';
+import { Preference } from '@/types/preference';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface PreferenceSelectorProps {
-  data: DataStructure;
+  values: Preference[];
+  onChange: (prefs: Preference[]) => void;
   loading: boolean;
-  selectedPreferences: string[];
-  onSelectPreferences: (prefs: string[]) => void;
 }
 
-export default function MealSelector({ data, loading, selectedPreferences, onSelectPreferences }: PreferenceSelectorProps) {
-  const togglePreference = (pref: string) => {
-    if (selectedPreferences.includes(pref)) {
-      onSelectPreferences(selectedPreferences.filter((p) => p !== pref));
+const preferenceList: Preference[][] = [
+  ['streetFood', 'bento', 'restaurant'],
+  ['light', 'strong', 'spicy'],
+  ['meat', 'vegetables', 'seafood', 'vegetarian'],
+  ['lowCarbs', 'protein', 'lowFat', 'lowCalories'],
+  ['rice', 'noodles', 'saucy', 'dessert', 'snack'],
+  [
+    'chinese',
+    'american',
+    'european',
+    'mediterranean',
+    'middleEastern',
+    'indian',
+    'japanese',
+    'korean',
+    'southeastAsian',
+  ],
+];
+
+export default function PreferenceSelector({ values, onChange, loading }: PreferenceSelectorProps) {
+  const { messages, locale } = useLanguage();
+
+  const togglePreference = (pref: Preference) => {
+    if (values.includes(pref)) {
+      onChange(values.filter((p) => p !== pref));
     } else {
-      onSelectPreferences([...selectedPreferences, pref]);
+      onChange([...values, pref]);
     }
-  }
+  };
 
   return (
-    <div className="p-4 border rounded-lg bg-amber-50 border-amber-200">
+    <div>
       <h3 className="mb-3">
-        { data.subTitles.preference }
+        {messages.preferences.title}
+        <br />
+        {locale === 'en' && <span>(multiple select)</span>}
       </h3>
-      {
-        data.preferences.map((group, groupIndex) => (
-          <div key={`group_${groupIndex}`} className="flex flex-wrap justify-center gap-2 mb-2">
-            {
-              group.map(option => (
-                <button
-                  key={option}
-                  disabled={loading}
-                  onClick={() => togglePreference(option)}
-                  className={clsx(
-                    'btn-small',
-                    selectedPreferences.includes(option) && 'btn-small--selected',
-                    loading && 'cursor-not-allowed'
-                  )}
-                >
-                  { option }
-                </button>
-              ))
-            }
-          </div>
-        ))
-      }
+      {preferenceList.map((group, groupIndex) => (
+        <div key={`group_${groupIndex}`} className="flex flex-wrap justify-center gap-2 mb-2">
+          {group.map((pref) => (
+            <button
+              key={pref}
+              disabled={loading}
+              onClick={() => togglePreference(pref)}
+              className={clsx('btn', values.includes(pref) && 'btn--selected')}
+            >
+              {messages.preferences[pref]}
+            </button>
+          ))}
+        </div>
+      ))}
     </div>
-  )
+  );
 }

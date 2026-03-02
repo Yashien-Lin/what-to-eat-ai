@@ -1,0 +1,105 @@
+const en = {
+  titles: {
+    label: 'What to Eat Today?',
+    description: 'Let AI decide for you',
+  },
+  modes: {
+    manual: {
+      label: '🍱 I have something in mind',
+      description: 'Choose your taste, AI recommends your meal',
+    },
+    prompt: {
+      label: '💬 I have no idea',
+      description: 'Say a sentence, AI decides your meal',
+    },
+  },
+  scenes: {
+    title: '🍽 Dining option',
+    home: 'Home Cooking',
+    dine_out: 'Dining Out',
+  },
+  meals: {
+    title: '⏰ Select a meal time',
+    breakfast: 'Breakfast',
+    lunch: 'Lunch',
+    dinner: 'Dinner',
+    midnight: 'Midnight Snack',
+  },
+  preferences: {
+    title: `🥗 Select your food preferences`,
+    streetFood: 'Street food',
+    bento: 'Bento',
+    restaurant: 'Restaurant',
+    spicy: 'Spicy food',
+    seafood: 'Seafood',
+    vegetarian: 'Vegetarian',
+    lowCarbs: 'Low carbs',
+    light: 'Light flavor',
+    strong: 'Strong flavor',
+    meat: 'Meat',
+    vegetables: 'Vegetables',
+    protein: 'Protein',
+    lowFat: 'Low fat',
+    lowCalories: 'Low calories',
+    rice: 'Rice dishes',
+    noodles: 'Noodle dishes',
+    saucy: 'Saucy dishes',
+    dessert: 'Desserts',
+    snack: 'Snacks',
+    chinese: 'Chinese cuisine',
+    american: 'American cuisine',
+    european: 'European cuisine',
+    mediterranean: 'Mediterranean cuisine',
+    middleEastern: 'Middle Eastern cuisine',
+    indian: 'Indian cuisine',
+    japanese: 'Japanese cuisine',
+    korean: 'Korean cuisine',
+    southeastAsian: 'Southeast Asian cuisine',
+  },
+  promptInput: {
+    title: '💬 Say a sentence, AI will help you decide what to eat',
+    placeholder:
+      'e.g. “I don’t have much of an appetite right now, I feel like something light..."',
+  },
+  submit: 'Decide for me !!',
+  analysisCard: {
+    title: '🤖 AI analysis of your preferences',
+    mood: '🎭 Dining mood',
+    mealIntent: '🍽 Recommended cuisine direction',
+    match: 'match',
+    confidenceLevel: {
+      low: "🤔 I'm not totally sure yet. Feel prompt to explore these options or share more details.",
+      medium: '😊 These should be a great match for you!',
+      high: "😎 I'm very confident you'll love these!",
+    },
+    moreInfo: 'I need more information',
+  },
+  result: {
+    noResult: 'No matching results 🥲',
+    recipe: {
+      searching: 'Cooking up your custom menu...',
+      recipeTitle: 'Dishes cooked just for you!',
+      recommend: 'Why recommended',
+      ingredients: 'Ingredients',
+      instruction: 'Instruction',
+    },
+    restaurant: {
+      searching: 'Looking for tasty bites nearby...',
+      mealsTitle: 'Nearby eats from AI',
+      checkMap: 'View Map',
+    },
+  },
+  validation: {
+    selectScene: 'Please choose between cooking at home or dining out',
+    selectPreferences: 'Please select your preferences',
+    promptInputContent: 'Say a sentence, let AI decides your meal',
+  },
+  errors: {
+    permissionDenied: 'Location permission denied. Please enable location access in your browser.',
+    positionUnavailable: 'Location unavailable.',
+    timeout: 'Location timeout.',
+    unknown: 'Something went wrong.',
+  },
+};
+
+export default en;
