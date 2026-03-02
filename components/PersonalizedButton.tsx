@@ -13,7 +13,7 @@ export default function PersonalizedButton({ submitText, loading, onClick }: Per
     <motion.button
       onClick={onClick}
       className={clsx(
-        "relative px-6 py-3 rounded-full font-semibold overflow-hidden text-white z-10",
+        "relative px-4 sm:px-6 py-3 rounded-full font-semibold overflow-hidden text-white z-10",
         "group animate-border-glow",
         loading && "cursor-not-allowed opacity-60"
       )}
@@ -30,7 +30,8 @@ export default function PersonalizedButton({ submitText, loading, onClick }: Per
     >
       🤖 {submitText}
       {/* 光暈效果 */}
-      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] animate-shimmer"></span>
+      <span className="absolute inset-0 bg-gradient-to-r from-transparent
+        via-white/30 to-transparent translate-x-[-100%] animate-shimmer"></span>
     </motion.button>
   );
 }
