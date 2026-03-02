@@ -1,195 +1,156 @@
-"use client"
-import clsx from "clsx";
-import { useEffect, useState } from "react";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import MealSelector from "@/components/MealSelector"
-import SceneSelector from "@/components/SceneSelector";
-import PersonalizedButton from "@/components/PersonalizedButton"
-import LoadingAnimation from "@/components/LoadingAnimation"
-import PreferenceSelector from "@/components/PreferenceSelector";
-import RestaurantList from "@/components/RestaurantList";
-import RecipeList from "@/components/RecipeList";
-import locales from "@/locales";
-import type { Language, Recipe, Restaurant } from "@/types/index";
+'use client';
 
-type Location = {
-  lat: number,
-  lng: number
-}
-
-type ResultType = 'recipe' | 'restaurant' | null;
-
-export interface Selected {
-  meal: string,
-  scene: string,
-  preferences: string[]
-}
+import { useEffect, useState } from 'react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import ModeSelector from '@/components/ModeSelector';
+import MealTimeSelector from '@/components/MealTimeSelector';
+import SceneSelector from '@/components/SceneSelector';
+import PersonalizedButton from '@/components/PersonalizedButton';
+import LoadingAnimation from '@/components/LoadingAnimation';
+import PreferenceSelector from '@/components/PreferenceSelector';
+import RestaurantList from '@/components/RestaurantList';
+import RecipeList from '@/components/RecipeList';
+import PromptInput from '@/components/PromptInput';
+import MealAnalysisCard from '@/components/MealAnalysisCard';
+import { useRecommendation } from '@/hooks/useRecommendation';
+import type { Mode, Meal, Scene, Preference, Results, Location } from '@/types/index';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
-  
-  // i18n
-  const [language, setLanguage] = useState<Language>('en');
-  const [selected, setSelected] = useState<Selected>({
-    meal: '',
-    scene: '',
-    preferences: []
-  })
-  const [resultType, setResultType] = useState<ResultType>(null); // 搜尋類型
-  const [restaurantList, setRestaurantList] = useState<Restaurant[]>([]);
-  const [recipeList, setRecipeList] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [noData, setNoData] = useState(false);
-  
-  const data = locales[language];
+  const { messages, locale } = useLanguage();
+
+  const [mode, setMode] = useState<Mode>('manual');
+  const [scene, setScene] = useState<Scene>('home');
+  const [meal, setMeal] = useState<Meal | null>(null);
+  const [preferences, setPreferences] = useState<Preference[]>([]);
+  const [promptInput, setPromptInput] = useState<string>('');
+
+  const {
+    recipeList,
+    restaurantList,
+    results,
+    loading,
+    noResult,
+    resetResults,
+    getRecommendation,
+  } = useRecommendation();
+
+  // 確認是否可送出
+  const manualReady = preferences.length > 0;
+  const promptReady = promptInput.trim().length > 0;
+  const canSubmit = mode === 'manual' ? manualReady : promptReady;
 
   useEffect(() => {
-    setSelected({
-      meal: '',
-      scene: '',
-      preferences: []
-    })
-  }, [language])
+    setMeal(null);
+    setPreferences([]);
+    setPromptInput('');
+    resetResults();
+  }, [mode]);
 
-  const getRecommendation = async () => {
-    if (!selected.scene) {
-      alert(
-        language === 'en'
-          ? 'Please select where you plan to dine'
-          : '請先選擇你打算在哪裡用餐'
-      )
+  useEffect(() => {
+    resetResults();
+  }, [scene]);
+
+  const handleSubmit = async () => {
+    if (!scene) {
+      alert(messages.validation.selectScene);
       return;
     }
 
-    setLoading(true);
-    setNoData(false);
-    setRecipeList([]);
-    setRestaurantList([]);
-    setResultType(null);
-
-    // 判斷選擇場景
-    const scene = selected.scene
-    const isHome = scene === '自己煮' || scene === 'Home Cooking'
-    const isOut = scene === '外面吃' || scene === 'Dining Out'
-
-    if (isHome) {
-      // 呼叫推薦餐點 API
-      const data = await fetch('/api/recipes', {
-        method: 'POST',
-        body: JSON.stringify({
-          meal: selected.meal,
-          scene,
-          preferences: selected.preferences,
-          language: language
-        })
-      }).then(res => res.json());
-
-      setRecipeList(data);
-      setResultType('recipe');
-      
-    } else if (isOut) {
-      await getNearbyRestaurants();
-    } 
-    setLoading(false);
-  }
-
-  // 呼叫google api，取得定位及附近餐廳
-  const getNearbyRestaurants = async () => {
-    const { lat, lng } = await getUserLocation()
-    const keyword = `${selected.meal} ${selected.scene} ${selected.preferences.join(' ')}`
-
-    const data = await fetch('/api/restaurants', {
-      method: 'POST',
-      body: JSON.stringify({lat, lng, keyword, language: language })
-    }).then(data => data.json());
-    
-    setResultType('restaurant');
-    
-    if (data.length > 0) {
-      setRestaurantList(data);
-    } else {
-      setNoData(true);
+    if (!canSubmit) {
+      alert(
+        mode === 'manual'
+          ? messages.validation.selectPreferences
+          : messages.validation.promptInputContent,
+      );
+      return;
     }
-  }
 
-  // 取得使用者位置
-  const getUserLocation = (): Promise<Location> => {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude
-          const lng = pos.coords.longitude
-          resolve({ lat, lng })
-        },
-        (err) => reject(err)
-      )
-    })
-  }
+    try {
+      const manualSelection =
+        mode === 'manual'
+          ? meal
+            ? [meal, ...preferences].join('、')
+            : preferences.join('、')
+          : '';
+
+      await getRecommendation({
+        scene,
+        input: mode === 'manual' ? manualSelection : promptInput,
+        locale,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        let message = '';
+
+        switch (error.message) {
+          case 'PERMISSION_DENIED':
+            message = messages.errors.permissionDenied;
+            break;
+          case 'POSITION_UNAVAILABLE':
+            message = messages.errors.positionUnavailable;
+            break;
+          case 'TIMEOUT':
+            message = messages.errors.timeout;
+            break;
+          default:
+            message = messages.errors.unknown;
+        }
+
+        alert(message);
+      }
+    }
+  };
 
   return (
-    <div className="min-h-screen p-4 mx-auto text-sm sm:text-base">
+    <div className="min-h-screen p-4 md:p-6 text-sm sm:text-base">
       {/* 中英切換按鈕 */}
-      <LanguageSwitcher language={language} setLanguage={setLanguage} loading={loading} />
-      <div className="max-w-2xl md:p-6 mx-auto">
-        <h1 className="mb-6">🍲 { data.title }</h1>
+      <LanguageSwitcher loading={loading} />
 
-        {/* Step 1: 時段選擇 */}
-        <MealSelector
-          data={data}
-          loading={loading}
-          selectedMeal={selected.meal}
-          onSelectMeal={meal =>
-            setSelected(prev => ({...prev, meal}))
-        }/>
-      
-        {/* Step 2: 場景選擇 */}
-        <SceneSelector
-          data={data}
-          loading={loading}
-          selectedScene={selected.scene}
-          onSelectScene={scene =>
-            setSelected(prev => ({...prev, scene}))
-        }/>
-
-        {/* Step 3: 偏好選擇 */}
-        <PreferenceSelector
-          data={data}
-          loading={loading}
-          selectedPreferences={selected.preferences}
-          onSelectPreferences={(prefs: string[]) =>
-            setSelected((prev) => ({ ...prev, preferences: prefs }))
-          }
-        />
+      <div className="max-w-3xl mx-auto">
+        {/* Title */}
+        <header className="text-center space-y-2 mb-6">
+          <h1 className="">{messages.titles.label}</h1>
+          <p className="text-gray-500">{messages.titles.description}</p>
+        </header>
+        {/* Mode Selection */}
+        <ModeSelector value={mode} onChange={setMode} loading={loading} />
+        {/* Scene Selection */}
+        <SceneSelector value={scene} onChange={setScene} loading={loading} />
+        {mode === 'manual' && (
+          <section className="border border-purple-300 bg-blue-50 rounded-xl p-3 md:py-10 md:px-[64px]">
+            {/* Meal Selection */}
+            <MealTimeSelector value={meal} onChange={setMeal} loading={loading} />
+            {/* Preferences Selection*/}
+            <PreferenceSelector values={preferences} onChange={setPreferences} loading={loading} />
+          </section>
+        )}
+        {mode === 'prompt' && (
+          <PromptInput loading={loading} value={promptInput} onChange={setPromptInput} />
+        )}
+        {/* CTA 送出按鈕 */}
+        <div className="my-5 text-center">
+          <PersonalizedButton
+            submitText={messages.submit}
+            loading={loading}
+            onClick={handleSubmit}
+          />
+        </div>
+        {loading && <LoadingAnimation scene={scene} />}
+        {/* 分隔線 */}
+        {(recipeList.length > 0 || restaurantList.length > 0) && (
+          <hr className="my-8 border-t-2 border-gray-300" />
+        )}
+        {/* 分析需求 */}
+        {results && <MealAnalysisCard results={results} mode={mode} scene={scene} />}
+        {/* 食譜列表 */}
+        {scene === 'home' && recipeList.length > 0 && <RecipeList recipes={recipeList} />}
+        {/* 餐廳列表 */}
+        {scene === 'dine_out' && restaurantList.length > 0 && (
+          <RestaurantList restaurants={restaurantList} />
+        )}
+        {noResult && <h2 className="my-8 text-gray-500">{messages.result.noResult}</h2>}
       </div>
-    
-      {/* 送出按鈕 */}
-      <div className="my-5 text-center">
-        <PersonalizedButton submitText={data.submit} loading={loading} onClick={() => getRecommendation()}/>
-      </div>
-      {loading && (
-        <LoadingAnimation scene={selected.scene} recipeMessage={data.makingRecipe} restaurantMessage={data.searchingMeals}/>
-      )}
-
-      {/* 分隔線 */}
-      {(recipeList.length > 0|| restaurantList.length > 0) && <hr className="my-8  lg:w-[70%]  border-t-2 border-gray-300 mx-auto" />}
-
-      {/* 食譜列表 */}
-      {resultType === 'recipe' && ( 
-        <RecipeList
-          recipes={recipeList} 
-          title={data.mealsTitle}
-          recommendLabel={data.recommend}
-          ingredientsLabel={data.ingredients}
-          instructionLabel={data.instruction}
-        />
-      )}
-      {/* 餐廳列表 */}
-      {resultType === 'restaurant' && (
-        noData ? (
-          <h3 className="my-8 text-gray-500">{data.noRestaurants}</h3>
-        ) : (
-          <RestaurantList restaurants={restaurantList} language={language} title={data.mealsTitle} />
-        )
-      )}
     </div>
   );
 }
