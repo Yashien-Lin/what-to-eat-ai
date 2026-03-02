@@ -13,7 +13,7 @@ import RecipeList from '@/components/RecipeList';
 import PromptInput from '@/components/PromptInput';
 import MealAnalysisCard from '@/components/MealAnalysisCard';
 import { useRecommendation } from '@/hooks/useRecommendation';
-import type { Mode, Meal, Scene, Preference, Results, Location } from '@/types/index';
+import type { Mode, Meal, Scene, Preference } from '@/types/index';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
@@ -110,7 +110,7 @@ export default function Home() {
       <div className="max-w-3xl mx-auto">
         {/* Title */}
         <header className="text-center space-y-2 mb-6">
-          <h1 className="">{messages.titles.label}</h1>
+          <h1>{messages.titles.label}</h1>
           <p className="text-gray-500">{messages.titles.description}</p>
         </header>
         {/* Mode Selection */}
