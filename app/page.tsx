@@ -1,49 +1,41 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import ModeSelector from '@/components/ModeSelector';
-import MealTimeSelector from '@/components/MealTimeSelector';
-import SceneSelector from '@/components/SceneSelector';
-import PersonalizedButton from '@/components/PersonalizedButton';
-import LoadingAnimation from '@/components/LoadingAnimation';
-import PreferenceSelector from '@/components/PreferenceSelector';
-import RestaurantList from '@/components/RestaurantList';
-import RecipeList from '@/components/RecipeList';
-import PromptInput from '@/components/PromptInput';
-import MealAnalysisCard from '@/components/MealAnalysisCard';
-import { useRecommendation } from '@/hooks/useRecommendation';
-import type { Mode, Meal, Scene, Preference } from '@/types/index';
-import { useLanguage } from '@/context/LanguageContext';
+import { useEffect, useState } from "react";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ModeSelector from "@/components/ModeSelector";
+import MealTimeSelector from "@/components/MealTimeSelector";
+import SceneSelector from "@/components/SceneSelector";
+import PersonalizedButton from "@/components/PersonalizedButton";
+import LoadingAnimation from "@/components/LoadingAnimation";
+import PreferenceSelector from "@/components/PreferenceSelector";
+import RestaurantList from "@/components/RestaurantList";
+import RecipeList from "@/components/RecipeList";
+import PromptInput from "@/components/PromptInput";
+import MealAnalysisCard from "@/components/MealAnalysisCard";
+import { useRecommendation } from "@/hooks/useRecommendation";
+import type { Mode, Mealtime, Scene, Preference } from "@/types/index";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Home() {
   const { messages, locale } = useLanguage();
-
-  const [mode, setMode] = useState<Mode>('manual');
-  const [scene, setScene] = useState<Scene>('home');
-  const [meal, setMeal] = useState<Meal | null>(null);
+  const [mode, setMode] = useState<Mode>("manual");
+  const [scene, setScene] = useState<Scene>("home");
+  const [mealtime, setMealtime] = useState<Mealtime | null>(null);
   const [preferences, setPreferences] = useState<Preference[]>([]);
-  const [promptInput, setPromptInput] = useState<string>('');
+  const [promptInput, setPromptInput] = useState<string>("");
 
-  const {
-    recipeList,
-    restaurantList,
-    results,
-    loading,
-    noResult,
-    resetResults,
-    getRecommendation,
-  } = useRecommendation();
+  const { results, loading, resetResults, getRecommendation } =
+    useRecommendation();
 
   // 確認是否可送出
   const manualReady = preferences.length > 0;
   const promptReady = promptInput.trim().length > 0;
-  const canSubmit = mode === 'manual' ? manualReady : promptReady;
+  const canSubmit = mode === "manual" ? manualReady : promptReady;
 
   useEffect(() => {
-    setMeal(null);
+    setMealtime(null);
     setPreferences([]);
-    setPromptInput('');
+    setPromptInput("");
     resetResults();
   }, [mode]);
 
@@ -59,7 +51,7 @@ export default function Home() {
 
     if (!canSubmit) {
       alert(
-        mode === 'manual'
+        mode === "manual"
           ? messages.validation.selectPreferences
           : messages.validation.promptInputContent,
       );
@@ -68,29 +60,29 @@ export default function Home() {
 
     try {
       const manualSelection =
-        mode === 'manual'
-          ? meal
-            ? [meal, ...preferences].join('、')
-            : preferences.join('、')
-          : '';
+        mode === "manual"
+          ? mealtime
+            ? [mealtime, ...preferences].join("、")
+            : preferences.join("、")
+          : "";
 
       await getRecommendation({
         scene,
-        input: mode === 'manual' ? manualSelection : promptInput,
+        input: mode === "manual" ? manualSelection : promptInput,
         locale,
       });
     } catch (error) {
       if (error instanceof Error) {
-        let message = '';
+        let message = "";
 
         switch (error.message) {
-          case 'PERMISSION_DENIED':
+          case "PERMISSION_DENIED":
             message = messages.errors.permissionDenied;
             break;
-          case 'POSITION_UNAVAILABLE':
+          case "POSITION_UNAVAILABLE":
             message = messages.errors.positionUnavailable;
             break;
-          case 'TIMEOUT':
+          case "TIMEOUT":
             message = messages.errors.timeout;
             break;
           default:
@@ -113,20 +105,37 @@ export default function Home() {
           <h1>{messages.titles.label}</h1>
           <p className="text-gray-500">{messages.titles.description}</p>
         </header>
+
         {/* Mode Selection */}
         <ModeSelector value={mode} onChange={setMode} loading={loading} />
+
         {/* Scene Selection */}
         <SceneSelector value={scene} onChange={setScene} loading={loading} />
-        {mode === 'manual' && (
+
+        {mode === "manual" && (
           <section className="border border-purple-300 bg-blue-50 rounded-xl p-3 md:py-10 md:px-[64px]">
-            {/* Meal Selection */}
-            <MealTimeSelector value={meal} onChange={setMeal} loading={loading} />
+            {/* Mealtime Selection */}
+            <MealTimeSelector
+              value={mealtime}
+              onChange={setMealtime}
+              loading={loading}
+            />
+
             {/* Preferences Selection*/}
-            <PreferenceSelector values={preferences} onChange={setPreferences} loading={loading} />
+            <PreferenceSelector
+              values={preferences}
+              onChange={setPreferences}
+              loading={loading}
+            />
           </section>
         )}
-        {mode === 'prompt' && (
-          <PromptInput loading={loading} value={promptInput} onChange={setPromptInput} />
+        {/* prompt輸入框 */}
+        {mode === "prompt" && (
+          <PromptInput
+            loading={loading}
+            value={promptInput}
+            onChange={setPromptInput}
+          />
         )}
         {/* CTA 送出按鈕 */}
         <div className="my-5 text-center">
@@ -136,20 +145,35 @@ export default function Home() {
             onClick={handleSubmit}
           />
         </div>
+        {/* loading */}
         {loading && <LoadingAnimation scene={scene} />}
+
         {/* 分隔線 */}
-        {(recipeList.length > 0 || restaurantList.length > 0) && (
+        {results?.result.data && (
           <hr className="my-8 border-t-2 border-gray-300" />
         )}
         {/* 分析需求 */}
-        {results && <MealAnalysisCard results={results} mode={mode} scene={scene} />}
-        {/* 食譜列表 */}
-        {scene === 'home' && recipeList.length > 0 && <RecipeList recipes={recipeList} />}
-        {/* 餐廳列表 */}
-        {scene === 'dine_out' && restaurantList.length > 0 && (
-          <RestaurantList restaurants={restaurantList} />
+        {results && results.analysis && (
+          <MealAnalysisCard analysis={results.analysis} mode={mode} />
         )}
-        {noResult && <h2 className="my-8 text-gray-500">{messages.result.noResult}</h2>}
+
+        {results && results.result.data && (
+          <>
+            {/* 食譜列表 */}
+            {results.result.type === "recipe" && (
+              <RecipeList recipes={results.result.data} />
+            )}
+            {/* 餐廳列表 */}
+            {results.result.type === "restaurant" && (
+              <RestaurantList restaurants={results.result.data} />
+            )}
+          </>
+        )}
+
+        {/* 查無結果 */}
+        {results && results.result.data.length === 0 && (
+          <h2 className="my-8 text-gray-500">{messages.result.noResult}</h2>
+        )}
       </div>
     </div>
   );
