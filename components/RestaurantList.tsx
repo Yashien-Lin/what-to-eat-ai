@@ -1,12 +1,16 @@
-import { Restaurant } from '@/types';
-import Rating from '@mui/material/Rating';
-import { useLanguage } from '@/context/LanguageContext';
+import { Restaurant } from "@/types";
+import Rating from "@mui/material/Rating";
+import { useLanguage } from "@/context/LanguageContext";
 
-export default function RestaurantList({ restaurants }: { restaurants: Restaurant[] }) {
+export default function RestaurantList({
+  restaurants,
+}: {
+  restaurants: Restaurant[];
+}) {
   const { messages } = useLanguage();
 
   const openMap = (url: string) => {
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   return (
@@ -22,7 +26,7 @@ export default function RestaurantList({ restaurants }: { restaurants: Restauran
           >
             {restaurant.photoUrl ? (
               <img
-                src={restaurant.photoUrl || '/no-image.png'}
+                src={restaurant.photoUrl || "/no-image.png"}
                 className="object-cover mr-3 rounded w-18 h-18"
                 alt={restaurant.name}
                 loading="lazy"
@@ -35,8 +39,15 @@ export default function RestaurantList({ restaurants }: { restaurants: Restauran
 
             <div className="flex flex-col overflow-hidden">
               <h4 className="text-left mb-0 truncate">{restaurant.name}</h4>
-              <p className="text-xs text-gray-500 truncate">{restaurant.address}</p>
-              <Rating value={restaurant.rating} precision={0.5} size="small" readOnly />
+              <p className="text-xs text-gray-500 truncate">
+                {restaurant.address}
+              </p>
+              <Rating
+                value={restaurant.rating}
+                precision={0.5}
+                size="small"
+                readOnly
+              />
               <a
                 href={restaurant.google_maps_url}
                 target="_blank"

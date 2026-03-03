@@ -1,2 +1,1 @@
-export type Scene = 'home' | 'dine_out';
- 
+export type Scene = "home" | "dine_out";

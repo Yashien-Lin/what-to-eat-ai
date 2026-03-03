@@ -1,1 +1,1 @@
-export type Mode = 'manual' | 'prompt';
+export type Mode = "manual" | "prompt";

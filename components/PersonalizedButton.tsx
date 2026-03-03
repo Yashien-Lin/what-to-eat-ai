@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import clsx from 'clsx';
+import { motion } from "framer-motion";
+import clsx from "clsx";
 
 interface PersonalizedButtonProps {
   submitText: string;
@@ -18,17 +18,17 @@ export default function PersonalizedButton({
     <motion.button
       onClick={onClick}
       className={clsx(
-        'relative px-4 sm:px-6 py-3 rounded-full font-semibold overflow-hidden text-white z-10',
-        'group animate-border-glow',
-        loading && 'cursor-not-allowed opacity-60',
+        "relative px-4 sm:px-6 py-3 rounded-full font-semibold overflow-hidden text-white z-10",
+        "group animate-border-glow",
+        loading && "cursor-not-allowed opacity-60",
       )}
       initial={{ scale: 1 }}
       animate={!loading ? { scale: [1, 1.08, 1] } : { scale: [1] }}
       transition={{ repeat: Infinity, duration: 2.5 }}
       whileHover={
         !loading
-          ? { scale: 1.1, boxShadow: '0px 0px 20px rgba(94, 94, 94, 0.6)' }
-          : { boxShadow: '0px 0px 20px rgba(94, 94, 94, 0.6)' }
+          ? { scale: 1.1, boxShadow: "0px 0px 20px rgba(94, 94, 94, 0.6)" }
+          : { boxShadow: "0px 0px 20px rgba(94, 94, 94, 0.6)" }
       }
       whileTap={{ scale: 0.9 }}
       disabled={loading}

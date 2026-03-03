@@ -1,5 +1,5 @@
-'use client';
-import { useLanguage } from '@/context/LanguageContext';
+"use client";
+import { useLanguage } from "@/context/LanguageContext";
 
 type PromptInputProps = {
   loading: boolean;
@@ -7,7 +7,11 @@ type PromptInputProps = {
   onChange: (string: string) => void;
 };
 
-export default function PromptInput({ loading, value, onChange }: PromptInputProps) {
+export default function PromptInput({
+  loading,
+  value,
+  onChange,
+}: PromptInputProps) {
   const { messages } = useLanguage();
 
   return (

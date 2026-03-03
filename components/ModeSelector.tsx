@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import clsx from 'clsx';
-import type { Mode } from '@/types/index';
-import { useLanguage } from '@/context/LanguageContext';
+import clsx from "clsx";
+import type { Mode } from "@/types/index";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ModeSelectorProps {
   value: Mode;
@@ -10,9 +10,13 @@ interface ModeSelectorProps {
   loading: boolean;
 }
 
-const MODE: Mode[] = ['manual', 'prompt'];
+const MODE: Mode[] = ["manual", "prompt"];
 
-export default function ModeSelector({ loading, value, onChange }: ModeSelectorProps) {
+export default function ModeSelector({
+  loading,
+  value,
+  onChange,
+}: ModeSelectorProps) {
   const { messages } = useLanguage();
 
   return (
@@ -23,12 +27,17 @@ export default function ModeSelector({ loading, value, onChange }: ModeSelectorP
             key={mode}
             disabled={loading}
             onClick={() => onChange(mode)}
-            className={clsx('rounded-xl btn-big p-3', value === mode ? 'btn-big--selected' : '')}
+            className={clsx(
+              "rounded-xl btn-big p-3",
+              value === mode ? "btn-big--selected" : "",
+            )}
           >
-            <p className="sm:text-lg font-semibold">{messages.modes[mode].label} </p>
+            <p className="sm:text-lg font-semibold">
+              {messages.modes[mode].label}{" "}
+            </p>
             <p
               className={`mt-1 text-xs sm:text-sm 
-              ${value === mode ? 'text-white' : 'text-gray-500'}`}
+              ${value === mode ? "text-white" : "text-gray-500"}`}
             >
               {messages.modes[mode].description}
             </p>

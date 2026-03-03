@@ -1,16 +1,20 @@
-import clsx from 'clsx';
-import { Scene } from '@/types';
-import { useLanguage } from '@/context/LanguageContext';
+import clsx from "clsx";
+import { Scene } from "@/types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface SceneSelectorProps {
   value: Scene;
-  onChange: (meal: Scene) => void;
+  onChange: (scene: Scene) => void;
   loading: boolean;
 }
 
-const SCENE: Scene[] = ['home', 'dine_out'];
+const SCENE: Scene[] = ["home", "dine_out"];
 
-export default function SceneSelector({ value, onChange, loading }: SceneSelectorProps) {
+export default function SceneSelector({
+  value,
+  onChange,
+  loading,
+}: SceneSelectorProps) {
   const { messages } = useLanguage();
 
   return (
@@ -22,7 +26,7 @@ export default function SceneSelector({ value, onChange, loading }: SceneSelecto
             key={scene}
             disabled={loading}
             onClick={() => onChange(scene)}
-            className={clsx('btn', scene === value ? 'btn--selected' : '')}
+            className={clsx("btn", scene === value ? "btn--selected" : "")}
           >
             {messages.scenes[scene]}
           </button>
