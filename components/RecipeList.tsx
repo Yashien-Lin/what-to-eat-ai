@@ -12,7 +12,7 @@ export default function RecipeList({ recipes }: { recipes: Recipe[] }) {
         {recipes.map((recipe, index) => (
           <div
             key={`recipe_${index}`}
-            className="border border-purple-200 w-full p-4 bg-white shadow-sm rounded-xl space-y-3"
+            className="border border-purple-200 w-full p-4 bg-white shadow-sm rounded-xl space-y-2"
           >
             {/* 食譜標題 */}
             <h3 className="mb-2 text-start">🍳 {recipe.name}</h3>

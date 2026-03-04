@@ -44,6 +44,7 @@ export async function getAIRecommendation({
     1. If scene is "home":
       - result.type must be "recipe"
       - result.data must contain an array of recipes (give at least 10 recipes):
+      - steps no need to be numbered, just list the steps.
         {
           "name": string,
           "reason": string,
