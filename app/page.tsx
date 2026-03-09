@@ -153,11 +153,11 @@ export default function Home() {
           <hr className="my-8 border-t-2 border-gray-300" />
         )}
         {/* 分析需求 */}
-        {results && results.analysis && (
+        {results?.analysis && results?.result?.data?.length > 0 && (
           <MealAnalysisCard analysis={results.analysis} mode={mode} />
         )}
 
-        {results && results.result.data && (
+        {results && results.result.data.length > 0 && (
           <>
             {/* 食譜列表 */}
             {results.result.type === "recipe" && (

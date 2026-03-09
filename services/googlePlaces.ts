@@ -96,6 +96,6 @@ export async function searchRestaurants({
       place_id: place.id,
       rating: place.rating,
       photoUrl: getPhotoUrl(place.photos?.[0]),
-      google_maps_url: `https://www.google.com/maps/place/?q=place_id:${place.id}`,
+      google_maps_url: `https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${place.id}`,
     }));
 }

@@ -29,7 +29,7 @@ export default function MealTimeSelector({
             className={clsx(
               "btn",
               value === m ? "btn--selected" : "",
-              m === "midnight" ? "leading-none" : "",
+              m === "midnight" ? "leading-none sm:leading-[1.5]" : "",
             )}
           >
             {messages.meals[m]}
