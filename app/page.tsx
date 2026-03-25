@@ -15,6 +15,7 @@ import MealAnalysisCard from "@/components/MealAnalysisCard";
 import { useRecommendation } from "@/hooks/useRecommendation";
 import type { Mode, Mealtime, Scene, Preference } from "@/types/index";
 import { useLanguage } from "@/context/LanguageContext";
+import { preferenceMapper } from "@/utils/preferenceMapper";
 
 export default function Home() {
   const { messages, locale } = useLanguage();
@@ -59,12 +60,13 @@ export default function Home() {
     }
 
     try {
-      const manualSelection =
-        mode === "manual"
-          ? mealtime
-            ? [mealtime, ...preferences].join("、")
-            : preferences.join("、")
-          : "";
+      let manualSelection = "";
+      if (mode === "manual") {
+        const localizedPreferences = preferenceMapper(preferences, locale); // 將所選偏好轉換為當地語言
+        manualSelection = mealtime
+          ? [mealtime, ...localizedPreferences].join("、")
+          : localizedPreferences.join("、");
+      }
 
       await getRecommendation({
         scene,

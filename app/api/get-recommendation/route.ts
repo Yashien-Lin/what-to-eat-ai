@@ -24,10 +24,7 @@ export async function POST(request: Request) {
     }
 
     // 若是dine_out，找附近的餐廳
-    const preferences = [
-      ...aiResult.analysis.keywords,
-      ...aiResult.analysis.preferred_cuisine,
-    ];
+    const preferences = aiResult.analysis.keywords.slice(0, 5); // 只取前五個關鍵字，避免過多條件限制而找不到符合的餐廳
     const restaurants = await searchRestaurants({
       location,
       preferences,
