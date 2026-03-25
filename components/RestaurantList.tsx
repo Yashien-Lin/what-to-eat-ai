@@ -1,7 +1,6 @@
 import { Restaurant } from "@/types";
 import Rating from "@mui/material/Rating";
 import { useLanguage } from "@/context/LanguageContext";
-import Image from "next/image";
 
 export default function RestaurantList({
   restaurants,
@@ -25,14 +24,15 @@ export default function RestaurantList({
               rounded-lg shadow cursor-pointer hover:shadow-md hover:bg-purple-200"
             onClick={() => openMap(restaurant.google_maps_url)}
           >
-            {restaurant.photoUrl ? (
-              <Image
-                src={restaurant.photoUrl || "/no-image.png"}
-                className="object-cover mr-3 rounded"
+            {restaurant.photoReference ? (
+              <img
+                src={
+                  restaurant.photoReference
+                    ? `/api/photo?ref=${restaurant.photoReference}`
+                    : "/no-image.png"
+                }
                 alt={restaurant.name}
-                loading="lazy"
-                width={72}
-                height={72}
+                className="object-cover mr-3 rounded w-18 h-18"
               />
             ) : (
               <div className="flex items-center justify-center w-16 h-16 mr-3 text-xs text-gray-400 bg-gray-200 rounded">

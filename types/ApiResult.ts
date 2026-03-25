@@ -13,7 +13,7 @@ export interface Restaurant {
   place_id: string;
   rating: number;
   google_maps_url: string;
-  photoUrl: string;
+  photoReference: string;
 }
 
 export interface Analysis {

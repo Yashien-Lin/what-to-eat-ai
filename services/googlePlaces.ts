@@ -68,18 +68,6 @@ export async function searchRestaurants({
 
   const data = await res.json();
 
-  // 將Goolge Places API新版照片物件轉換成舊版可用 URL
-  const getPhotoUrl = (photo?: GooglePlacePhoto, maxWidth = 400) => {
-    if (!photo) return null;
-
-    // 新版photo.name格式： "places/ChIJwa_W3cQjQRV/photos/ABC"，取 photoreference：ABC
-    const parts = photo.name.split("/");
-    const photoreference = parts[parts.length - 1];
-    return photoreference
-      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoreference}&key=${apiKey}`
-      : null;
-  };
-
   if (!data.places) {
     console.error("Google API error response:", data);
     return []; // 避免炸掉
@@ -95,7 +83,7 @@ export async function searchRestaurants({
       address: place.formattedAddress,
       place_id: place.id,
       rating: place.rating,
-      photoUrl: getPhotoUrl(place.photos?.[0]),
+      photoReference: place.photos?.[0]?.name.split("/").pop() ?? null, // 只回傳 reference
       google_maps_url: `https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${place.id}`,
     }));
 }
